@@ -23,12 +23,6 @@ aisles = pd.read_csv('aisles.csv')
 departments = pd.read_csv('departments.csv')
 
 
-# In[3]:
-
-
-orders = orders.loc[orders.user_id.isin(orders.user_id.drop_duplicates().sample(frac=0.1, random_state=25))] 
-
-
 # In[4]:
 
 
@@ -711,12 +705,6 @@ data_test = data_test.drop(['eval_set','order_id'], axis=1)
 data_test.head()
 
 
-# In[94]:
-
-
-import sys
-get_ipython().system('{sys.executable} -m pip install xgboost')
-
 
 # In[95]:
 
@@ -744,7 +732,7 @@ parameters = {'eval_metric':'logloss',
 ########################################
 ## INSTANTIATE XGBClassifier()
 ########################################
-xgbc = xgb.XGBClassifier(objective='binary:logistic', parameters=parameters, num_boost_round=10)
+xgbc = xgb.XGBClassifier(objective='binary:logistic', parameters=parameters, num_boost_round=10, tree_method="hist")
 
 ########################################
 ## TRAIN MODEL
@@ -754,26 +742,11 @@ model = xgbc.fit(X_train, y_train)
 ##################################
 # FEATURE IMPORTANCE - GRAPHICAL
 ##################################
-xgb.plot_importance(model)
-
 
 # In[96]:
 
 
 model.get_xgb_params()
-
-
-# In[97]:
-
-
-###########################
-## DISABLE WARNINGS
-###########################
-import sys
-import warnings
-
-if not sys.warnoptions:
-    warnings.simplefilter("ignore")
 
 
 
